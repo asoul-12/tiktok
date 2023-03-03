@@ -1,8 +1,8 @@
-package api
+package tools
 
 import (
 	"encoding/json"
-	"github.com/bytedance/gopkg/util/logger"
+	"github.com/sirupsen/logrus"
 	"io"
 	"net/http"
 )
@@ -11,20 +11,23 @@ type PersonalSignature struct {
 	Hitokoto string `json:"hitokoto"`
 }
 
-func GeneratePersonalSignature() string {
+func GeneratePersonalSignature() (string, error) {
 	resp, err := http.Get("https://v1.hitokoto.cn")
 	if err != nil {
-		logger.Error(err)
+		logrus.Error(err)
+		return "", err
 	}
 	defer resp.Body.Close()
 	var personalSignature PersonalSignature
 	bytes, err := io.ReadAll(resp.Body)
 	if err != nil {
-		logger.Error(err)
+		logrus.Error(err)
+		return "", err
 	}
 	err = json.Unmarshal(bytes, &personalSignature)
 	if err != nil {
-		logger.Error(err)
+		logrus.Error(err)
+		return "", err
 	}
-	return personalSignature.Hitokoto
+	return personalSignature.Hitokoto, nil
 }

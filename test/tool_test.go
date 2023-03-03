@@ -26,3 +26,7 @@ func TestAESScode(t *testing.T) {
 	decryptByAes, _ := tools.DecryptByAes(aes)
 	fmt.Printf("%s", decryptByAes)
 }
+
+func TestIdenticon(t *testing.T) {
+	tools.GenerateAvatar()
+}

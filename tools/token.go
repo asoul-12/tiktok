@@ -2,6 +2,7 @@ package tools
 
 import (
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/sirupsen/logrus"
 )
 
 func GenerateToken(username string) (string, error) {
@@ -16,7 +17,12 @@ func GenerateToken(username string) (string, error) {
 		IssuedAt:  nil,     // 发布时间，签发时间
 		ID:        "",      // jwt的唯一身份标识
 	}
-	return jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte("AllYourBase"))
+	signedString, err := jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte("AllYourBase"))
+	if err != nil {
+		logrus.Error(err)
+		return "", err
+	}
+	return signedString, nil
 }
 
 func ParseToken(token string) (*jwt.RegisteredClaims, error) {
