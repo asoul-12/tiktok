@@ -2,9 +2,9 @@ package test
 
 import (
 	"testing"
-	"tiktok/api"
+	"tiktok/tools"
 )
 
 func TestHitokotoApi(t *testing.T) {
-	println(api.GeneratePersonalSignature())
+	println(tools.GeneratePersonalSignature())
 }
