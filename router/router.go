@@ -5,7 +5,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"tiktok/handler"
+	"tiktok/controller"
 	"time"
 )
 
@@ -21,11 +21,19 @@ func RegisterRouter(hertz *server.Hertz) {
 			c.Request.QueryString())
 	})
 	rootRouter := hertz.Group("/douyin")
-	var userService handler.UserService
-	var feedService handler.FeedService
+	var userService controller.UserService
+	var feedService controller.FeedService
+	var favoriteService controller.FavoriteService
 	rootRouter.POST("/user/register/", userService.Register)
 	rootRouter.POST("/user/login/", userService.Login)
 	rootRouter.GET("/user/", userService.UserInfo)
-	rootRouter.GET("/feed", feedService.Feed)
-	rootRouter.POST("/publish/action", feedService.Publish)
+
+	rootRouter.GET("/feed/", feedService.Feed)
+
+	rootRouter.GET("/publish/list/", feedService.PublishList)
+	rootRouter.POST("/publish/action/", feedService.Publish)
+
+	rootRouter.POST("/favorite/action/", favoriteService.Action)
+	rootRouter.GET("/favorite/list/", favoriteService.List)
+
 }
