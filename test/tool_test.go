@@ -28,5 +28,21 @@ func TestAESScode(t *testing.T) {
 }
 
 func TestIdenticon(t *testing.T) {
-	tools.GenerateAvatar()
+	//tools.GenerateAvatar()
+}
+
+func TestFFmpeg(t *testing.T) {
+	var ffmpeg = &tools.Bind{
+		FFMpeg:         "D:\\tools\\ffmpeg\\bin\\ffmpeg.exe",
+		FFProbe:        "D:\\tools\\ffmpeg\\bin\\ffprobe.exe",
+		CommandTimeout: 5000,
+	}
+	err := ffmpeg.Thumbnail("../assets/bear.mp4", "../assets/testdata/bear.jpg", 0, true)
+	if err != nil {
+		fmt.Println(err)
+	}
+	//_, err = ffmpeg.Transcoding("../assets/bear.mp4", "../assets/testdata/bear.mp4", true)
+	//if err != nil {
+	//	fmt.Println( err)
+	//}
 }

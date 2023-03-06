@@ -1,4 +1,4 @@
-package repo
+package repository
 
 import (
 	"tiktok/global"
@@ -18,4 +18,7 @@ func (base *BaseRepo) First(model any, where any) error {
 
 func (base *BaseRepo) Find(model any, where any) error {
 	return global.DB.Where(where).Find(model).Error
+}
+func (base *BaseRepo) FindWhereOrderLimit(model any, where any, order any, limit int) error {
+	return global.DB.Debug().Where(where).Order(order).Limit(limit).Find(model).Error
 }

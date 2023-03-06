@@ -5,8 +5,7 @@ type Video struct {
 	Author        int64
 	PlayUrl       string
 	CoverUrl      string
-	FavoriteCount int
+	FavoriteCount int64
 	CommentCount  int
-	IsFavorite    bool
 	Title         string
 }

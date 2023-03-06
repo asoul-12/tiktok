@@ -1,4 +1,4 @@
-package repo
+package repository
 
 import (
 	"github.com/sirupsen/logrus"
@@ -29,15 +29,17 @@ func (userRepo *UserRepo) FindUserByUserName(username string) *model.User {
 	return user
 }
 
-//func (userRepo *UserRepo) FindUserByUserId(userId int64) *model.User {
-//	var user *model.User
-//	err := baseRepo.First(&user, model.User{ID: userId})
-//	if err != nil {
-//		logger.Error(err)
-//		return nil
-//	}
-//	return user
-//}
+func (userRepo *UserRepo) FindUserByUserId(userId int64) (*model.User, error) {
+	var user *model.User
+	err := baseRepo.First(&user, model.Model{
+		ID: userId,
+	})
+	if err != nil {
+		logrus.Error(err)
+		return nil, err
+	}
+	return user, nil
+}
 
 func (userRepo *UserRepo) GetUserInfo(userId int64) (user *dto.User, err error) {
 	err = baseRepo.First(&user, dto.User{ID: userId})
