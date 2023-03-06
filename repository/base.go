@@ -20,5 +20,10 @@ func (base *BaseRepo) Find(model any, where any) error {
 	return global.DB.Where(where).Find(model).Error
 }
 func (base *BaseRepo) FindWhereOrderLimit(model any, where any, order any, limit int) error {
-	return global.DB.Debug().Where(where).Order(order).Limit(limit).Find(model).Error
+	return global.DB.Where(where).Order(order).Limit(limit).Find(model).Error
+}
+
+func (base *BaseRepo) update(model any, where any, updateCol string, updateVal any) error {
+	return global.DB.Model(model).Where(where).Update(updateCol, updateVal).Error
+
 }
