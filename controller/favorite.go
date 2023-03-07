@@ -91,7 +91,7 @@ func (favoriteService *FavoriteService) List(ctx context.Context, req *app.Reque
 		videosList = append(videosList, item)
 	}
 	req.JSON(http.StatusOK, dto.VideoListResp{
-		StatusCode: "0",
+		StatusCode: 0,
 		StatusMsg:  "拉取用户喜欢列表",
 		VideoList:  videosList,
 	})
