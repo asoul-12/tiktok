@@ -8,7 +8,6 @@ import (
 	"tiktok/model"
 	"tiktok/model/dto"
 	"tiktok/repository"
-	"tiktok/tools"
 )
 
 type FavoriteService struct {
@@ -19,8 +18,8 @@ type FavoriteService struct {
 func (favoriteService *FavoriteService) Action(ctx context.Context, req *app.RequestContext) {
 	video := req.Query("video_id")
 	actionType := req.Query("action_type")
-	token := req.Query("token")
-	isFavorite := false
+	userId := req.GetInt64("userId")
+	var isFavorite bool
 	// 参数校验
 	switch actionType {
 	case "1":
@@ -34,31 +33,27 @@ func (favoriteService *FavoriteService) Action(ctx context.Context, req *app.Req
 		})
 		return
 	}
-	// token 解析
-	claims, err := tools.ParseToken(token)
-	if err != nil {
-		req.JSON(http.StatusOK, dto.BaseResp{
-			StatusCode: 1,
-			StatusMsg:  "token过期",
-		})
-		return
-	}
-	user := claims.Audience[0]
-	userId, userErr := strconv.ParseInt(user, 10, 64)
 	videoId, VideoErr := strconv.ParseInt(video, 10, 64)
-	if userErr != nil || VideoErr != nil {
+	if VideoErr != nil {
 		req.JSON(http.StatusOK, dto.BaseResp{
 			StatusCode: 1,
-			StatusMsg:  "token过期",
+			StatusMsg:  "视频不存在",
 		})
 		return
 	}
 	// repo
-	favoriteService.favoriteRepo.FavoriteAction(&model.Favorite{
+	err := favoriteService.favoriteRepo.FavoriteAction(&model.Favorite{
 		UserId:     userId,
 		VideoId:    videoId,
 		IsFavorite: isFavorite,
 	})
+	if err != nil {
+		req.JSON(http.StatusOK, dto.BaseResp{
+			StatusCode: 1,
+			StatusMsg:  "点赞失败",
+		})
+		return
+	}
 	req.JSON(http.StatusOK, dto.BaseResp{
 		StatusCode: 0,
 		StatusMsg:  "点赞",
@@ -66,16 +61,19 @@ func (favoriteService *FavoriteService) Action(ctx context.Context, req *app.Req
 }
 
 func (favoriteService *FavoriteService) List(ctx context.Context, req *app.RequestContext) {
-	//token := req.Query("token")
-	userId, err := strconv.ParseInt(req.Query("user_id"), 10, 64)
+	id := req.Query("user_id")
+	userId, err := strconv.ParseInt(id, 10, 64)
 	if err != nil {
-		req.JSON(http.StatusOK, dto.BaseResp{
-			StatusCode: 1,
-			StatusMsg:  "用户id无法识别",
-		})
-		return
+		if err != nil {
+			req.JSON(http.StatusOK, dto.BaseResp{
+				StatusCode: 1,
+				StatusMsg:  "用户id不存在",
+			})
+			return
+		}
 	}
-	videoList, err := favoriteService.videoRepo.GetUserPublishList(userId)
+	// repo
+	videoList, err := favoriteService.favoriteRepo.GetUserFavoriteList(userId)
 	if err != nil {
 		req.JSON(http.StatusOK, dto.BaseResp{
 			StatusCode: 1,
@@ -83,6 +81,7 @@ func (favoriteService *FavoriteService) List(ctx context.Context, req *app.Reque
 		})
 		return
 	}
+	// model -> dto
 	var videosList []dto.Video
 	for _, v := range videoList {
 		item := dto.Video{

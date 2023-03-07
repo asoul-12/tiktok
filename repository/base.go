@@ -16,6 +16,10 @@ func (base *BaseRepo) First(model any, where any) error {
 	return global.DB.Where(where).First(model).Error
 }
 
+func (base *BaseRepo) Take(model any, where any) error {
+	return global.DB.Where(where).Take(model).Error
+}
+
 func (base *BaseRepo) Find(model any, where any) error {
 	return global.DB.Where(where).Find(model).Error
 }

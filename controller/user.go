@@ -3,7 +3,6 @@ package controller
 import (
 	"context"
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 	"tiktok/model"
@@ -98,26 +97,40 @@ func (u *UserService) Login(ctx context.Context, req *app.RequestContext) {
 }
 
 func (u *UserService) UserInfo(ctx context.Context, req *app.RequestContext) {
-	userId, err := strconv.ParseInt(req.Query("user_id"), 10, 64)
+	userId := req.Query("user_id")
+	id, err := strconv.ParseInt(userId, 10, 64)
 	if err != nil {
-		logrus.Error(err)
 		req.JSON(http.StatusOK, dto.UserInfoResp{
 			StatusCode: 1,
-			StatusMsg:  "网络错误",
+			StatusMsg:  "用户不存在",
 		})
 		return
 	}
-	user, err := userRepo.GetUserInfo(userId)
+	user, err := userRepo.GetUserInfo(id)
 	if err != nil {
 		req.JSON(http.StatusOK, dto.UserInfoResp{
 			StatusCode: 1,
-			StatusMsg:  "网络错误",
+			StatusMsg:  "用户不存在",
 		})
 		return
+	}
+	// model -> dto
+	userDto := &dto.User{
+		Avatar:          user.Avatar,
+		BackgroundImage: user.BackgroundImage,
+		FavoriteCount:   user.FavoriteCount,
+		FollowCount:     user.FollowCount,
+		FollowerCount:   user.FollowerCount,
+		ID:              user.ID,
+		IsFollow:        false,
+		Name:            user.Name,
+		Signature:       user.Signature,
+		TotalFavorited:  user.TotalFavorited,
+		WorkCount:       user.WorkCount,
 	}
 	req.JSON(http.StatusOK, dto.UserInfoResp{
 		StatusCode: 0,
 		StatusMsg:  "拉取用户信息",
-		User:       user,
+		User:       userDto,
 	})
 }
