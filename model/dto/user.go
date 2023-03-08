@@ -14,6 +14,7 @@ type User struct {
 	WorkCount       int64  `json:"work_count"`       // 作品数
 }
 type FriendUser struct {
+	ID      int64  `json:"id"`
 	Avatar  string `json:"avatar"`   // 用户头像
 	Name    string `json:"name"`     // 用户名称
 	Message string `json:"message"`  // 和该好友的最新聊天消息

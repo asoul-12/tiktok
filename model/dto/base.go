@@ -37,3 +37,9 @@ type FriendListResp struct {
 	StatusMsg  string       `json:"status_msg"`  // 返回状态描述
 	UserList   []FriendUser `json:"user_list"`   // 用户信息列表
 }
+
+type MessageResp struct {
+	StatusCode  int32     `json:"status_code"`  // 状态码，0-成功，其他值-失败
+	StatusMsg   string    `json:"status_msg"`   // 返回状态描述
+	MessageList []Message `json:"message_list"` // 用户列表
+}

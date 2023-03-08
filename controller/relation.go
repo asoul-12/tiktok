@@ -139,6 +139,7 @@ func (relationService *RelationService) FriendList(ctx context.Context, req *app
 	var friendList []dto.FriendUser
 	for _, user := range list {
 		item := dto.FriendUser{
+			ID:      user.ID,
 			Avatar:  user.Avatar,
 			Name:    user.Name,
 			Message: "todo",
