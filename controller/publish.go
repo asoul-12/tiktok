@@ -132,7 +132,7 @@ func (publishService *PublishService) PublishList(ctx context.Context, req *app.
 		videosList = append(videosList, item)
 	}
 	req.JSON(http.StatusOK, dto.VideoListResp{
-		StatusCode: "0",
+		StatusCode: 0,
 		StatusMsg:  "拉取用户作品列表",
 		VideoList:  videosList,
 	})

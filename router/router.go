@@ -11,12 +11,12 @@ var (
 	feedService     controller.FeedService
 	publishService  controller.PublishService
 	favoriteService controller.FavoriteService
+	relationService controller.RelationService
 )
 
 func RegisterRouter(hertz *server.Hertz) {
-	hertz.Use(middleware.Log)
 	rootRouter := hertz.Group("/douyin")
-
+	hertz.Use(middleware.Log)
 	authRouter := rootRouter.Group("/", middleware.JWT)
 	// user
 	rootRouter.POST("/user/register/", userService.Register)
@@ -30,5 +30,11 @@ func RegisterRouter(hertz *server.Hertz) {
 	// favorite
 	authRouter.POST("/favorite/action/", favoriteService.Action)
 	authRouter.GET("/favorite/list/", favoriteService.List)
+	// relation
+	authRouter.GET("/relation/follow/list/", relationService.FollowList)
+	authRouter.POST("/relation/action/", relationService.FollowAction)
+	authRouter.GET("/relation/follower/list/", relationService.FollowerList)
+	authRouter.GET("/relation/friend/list/", relationService.FriendList)
+	// message
 
 }
