@@ -18,6 +18,7 @@ func TestUser(t *testing.T) {
 func TestGetVideoList(t *testing.T) {
 	serverInit.InitDatabaseTest()
 	videoRepo := repository.VideoRepo{}
-	videoList := videoRepo.GetFeedList(time.Now().Unix())
+	list, _ := videoRepo.GetFeedList(time.Now().Unix())
+	videoList := list
 	fmt.Println(videoList)
 }

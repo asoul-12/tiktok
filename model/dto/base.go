@@ -27,7 +27,19 @@ type VideoListResp struct {
 	VideoList  []Video `json:"video_list"`  // 用户点赞视频列表
 }
 type FollowListResp struct {
-	StatusCode string `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusCode int32  `json:"status_code"` // 状态码，0-成功，其他值-失败
 	StatusMsg  string `json:"status_msg"`  // 返回状态描述
 	UserList   []User `json:"user_list"`   // 用户信息列表
+}
+
+type FriendListResp struct {
+	StatusCode int32        `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string       `json:"status_msg"`  // 返回状态描述
+	UserList   []FriendUser `json:"user_list"`   // 用户信息列表
+}
+
+type MessageResp struct {
+	StatusCode  int32     `json:"status_code"`  // 状态码，0-成功，其他值-失败
+	StatusMsg   string    `json:"status_msg"`   // 返回状态描述
+	MessageList []Message `json:"message_list"` // 用户列表
 }

@@ -29,7 +29,7 @@ func (feedService *FeedService) Feed(ctx context.Context, req *app.RequestContex
 	}
 	fmt.Println(isLogin)
 	// 首次加载feed流
-	if len(latestTime) != 0 {
+	if len(latestTime) != 0 && latestTime != "0" {
 		reqTime, err = strconv.ParseInt(latestTime, 10, 64)
 		if err != nil {
 			logrus.Error(err)
@@ -37,18 +37,23 @@ func (feedService *FeedService) Feed(ctx context.Context, req *app.RequestContex
 				StatusCode: 1,
 				StatusMsg:  "系统时间有误",
 			})
+			return
 		}
-		return
 	}
 	// repo 根据时间戳加载视频
 	videoList, err := feedService.videoRepo.GetFeedList(reqTime)
-	if len(videoList) == 0 || err != nil {
+	if err == nil && len(videoList) == 0 {
+		reqTime = time.Now().UnixMilli()
+		videoList, err = feedService.videoRepo.GetFeedList(reqTime)
+	}
+	if err != nil {
 		req.JSON(http.StatusOK, dto.BaseResp{
 			StatusCode: 1,
-			StatusMsg:  "加载视频失败，服务器无视频",
+			StatusMsg:  "加载视频失败",
 		})
 		return
 	}
+
 	// 拼装dto对象 1.加载该视频的作者信息 （用户是否关注该作者） 2.判断该视频是否被点赞
 	var videosList []dto.Video
 	for _, v := range videoList {
