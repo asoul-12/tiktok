@@ -62,6 +62,30 @@ func (relationRepo *RelationRepo) FollowList(userId int64) (userList []*model.Us
 	return userList, err
 }
 
+func (relationRepo *RelationRepo) FollowerList(userId int64) (userList []*model.User, err error) {
+	var follow model.Follow
+	err = global.DB.Model(follow).
+		Select("users.avatar", "users.name").
+		Joins("LEFT JOIN users on follows.follow_id = users.id").
+		Where(model.Follow{FollowId: userId, IsFollow: true}).
+		Find(&userList).Error
+	if err != nil {
+		return nil, err
+	}
+	return userList, err
+}
+
+func (relationRepo *RelationRepo) FriendList(userId int64) (userList []*model.User, err error) {
+	err = global.DB.Raw("SELECT users.id,users.`name`,users.avatar FROM "+
+		"(SELECT f1.follow_id  FROM ( SELECT * FROM follows WHERE user_id = ? ) AS f1 "+
+		"INNER JOIN follows f2 ON f1.follow_id = f2.user_id ) AS friend "+
+		"LEFT JOIN users ON friend.follow_id = users.id", userId).Scan(&userList).Error
+	if err != nil {
+		return nil, err
+	}
+	return userList, err
+}
+
 func (relationRepo *RelationRepo) CheckFollow(userId, targetId int64) (bool, error) {
 	var follow *model.Follow
 	var count int64

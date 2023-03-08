@@ -13,3 +13,9 @@ type User struct {
 	TotalFavorited  int64  `json:"total_favorited"`  // 获赞数量
 	WorkCount       int64  `json:"work_count"`       // 作品数
 }
+type FriendUser struct {
+	Avatar  string `json:"avatar"`   // 用户头像
+	Name    string `json:"name"`     // 用户名称
+	Message string `json:"message"`  // 和该好友的最新聊天消息
+	MsgType string `json:"msgType "` // message消息的类型，0 => 当前请求用户接收的消息， 1 => 当前请求用户发送的消息
+}

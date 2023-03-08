@@ -15,8 +15,8 @@ var (
 )
 
 func RegisterRouter(hertz *server.Hertz) {
-	rootRouter := hertz.Group("/douyin")
 	hertz.Use(middleware.Log)
+	rootRouter := hertz.Group("/douyin")
 	authRouter := rootRouter.Group("/", middleware.JWT)
 	// user
 	rootRouter.POST("/user/register/", userService.Register)
