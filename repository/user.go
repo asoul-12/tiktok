@@ -1,40 +1,43 @@
 package repository
 
 import (
-	"github.com/sirupsen/logrus"
+	"errors"
+	"gorm.io/gorm"
 	"tiktok/model"
 )
 
 type UserRepo struct{}
 
-func (userRepo *UserRepo) CreateUser(user *model.User) (bool, int64) {
+func (userRepo *UserRepo) CreateUser(user *model.User) (int64, error) {
 	user.SetId()
 	user.EncryptPassword()
 	user.SetSignature()
 	err := baseRepo.Create(user)
 	if err != nil {
-		logrus.Error(err)
-		return false, -1
+		return 0, err
 	}
-	return true, user.ID
+	return user.ID, nil
 }
-func (userRepo *UserRepo) FindUserByUserName(username string) *model.User {
+
+func (userRepo *UserRepo) FindUserByUserName(username string) (*model.User, error) {
 	var user *model.User
-	err := baseRepo.First(&user, model.User{Name: username})
-	if err != nil {
-		logrus.Error(err)
-		return nil
+	err := baseRepo.Take(&user, &model.User{Name: username})
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	} else if err != nil {
+		return nil, err
 	}
-	return user
+	return user, nil
 }
 
 func (userRepo *UserRepo) FindUserByUserId(userId int64) (*model.User, error) {
 	var user *model.User
-	err := baseRepo.First(&user, model.Model{
+	err := baseRepo.Take(&user, model.Model{
 		ID: userId,
 	})
-	if err != nil {
-		logrus.Error(err)
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 	return user, nil
@@ -42,9 +45,10 @@ func (userRepo *UserRepo) FindUserByUserId(userId int64) (*model.User, error) {
 
 func (userRepo *UserRepo) GetUserInfo(userId int64) (*model.User, error) {
 	var user *model.User
-	err := baseRepo.First(&user, model.Model{ID: userId})
-	if err != nil {
-		logrus.Error(err)
+	err := baseRepo.Take(&user, model.Model{ID: userId})
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	} else if err != nil {
 		return nil, err
 	}
 	return user, nil

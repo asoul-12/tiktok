@@ -11,6 +11,7 @@ func TestSnowFlake(t *testing.T) {
 	flake := tools.SnowFlake{}
 	println(flake.GenSnowID())
 }
+
 func TestToken(t *testing.T) {
 	token, err := tools.GenerateToken("asoul")
 	if err != nil {
@@ -20,15 +21,12 @@ func TestToken(t *testing.T) {
 	registeredClaims, err := tools.ParseToken(token)
 	fmt.Println(registeredClaims.Audience[0])
 }
-func TestAESScode(t *testing.T) {
+
+func TestAES(t *testing.T) {
 	aes, _ := tools.EncryptByAes([]byte("asoul"))
 	fmt.Printf("%v\n", aes)
 	decryptByAes, _ := tools.DecryptByAes(aes)
 	fmt.Printf("%s", decryptByAes)
-}
-
-func TestIdenticon(t *testing.T) {
-	//tools.GenerateAvatar()
 }
 
 func TestFFmpeg(t *testing.T) {
