@@ -74,6 +74,13 @@ func (relationService *RelationService) FollowAction(ctx context.Context, req *a
 		})
 		return
 	}
+	if userId == toUserId {
+		req.JSON(http.StatusOK, dto.BaseResp{
+			StatusCode: 1,
+			StatusMsg:  "不允许关注自己",
+		})
+		return
+	}
 	// repo
 	err = relationService.relationRepo.Follow(&model.Follow{
 		UserId:   userId,

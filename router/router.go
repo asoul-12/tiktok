@@ -13,6 +13,7 @@ var (
 	favoriteService controller.FavoriteService
 	relationService controller.RelationService
 	messageService  controller.MessagesService
+	commentService  controller.CommentService
 )
 
 func RegisterRouter(hertz *server.Hertz) {
@@ -40,4 +41,6 @@ func RegisterRouter(hertz *server.Hertz) {
 	authRouter.GET("/message/chat/", messageService.MessageList)
 	authRouter.POST("/message/action/", messageService.SendMessage)
 	// comment
+	authRouter.POST("/comment/action/", commentService.CommentAction)
+	rootRouter.GET("/comment/list/", commentService.CommentList)
 }

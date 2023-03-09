@@ -19,7 +19,14 @@ func (u *UserService) Register(ctx context.Context, req *app.RequestContext) {
 	username := req.Query("username")
 	password := req.Query("password")
 
-	user := userRepo.FindUserByUserName(username)
+	user, err := userRepo.FindUserByUserName(username)
+	if err != nil {
+		req.JSON(http.StatusOK, dto.LoginAndRegisterResp{
+			StatusCode: 1,
+			StatusMsg:  "网络出错了",
+		})
+		return
+	}
 	if user != nil {
 		req.JSON(http.StatusOK, dto.LoginAndRegisterResp{
 			StatusCode: 1,
@@ -28,26 +35,30 @@ func (u *UserService) Register(ctx context.Context, req *app.RequestContext) {
 		return
 	}
 
-	isSuccess, id := userRepo.CreateUser(&model.User{
+	userId, err := userRepo.CreateUser(&model.User{
 		Name:     username,
 		Password: password,
 	})
-	if isSuccess {
-		token, err := tools.GenerateToken(strconv.FormatInt(id, 10))
-		if err == nil {
-			req.JSON(http.StatusOK, dto.LoginAndRegisterResp{
-				StatusCode: 0,
-				StatusMsg:  "注册成功",
-				UserId:     id,
-				Token:      token,
-			})
-			return
-		}
+	if err != nil {
+		req.JSON(http.StatusOK, dto.BaseResp{
+			StatusCode: 0,
+			StatusMsg:  "注册失败",
+		})
+		return
 	}
-
+	token, err := tools.GenerateToken(strconv.FormatInt(userId, 10))
+	if err != nil {
+		req.JSON(http.StatusOK, dto.LoginAndRegisterResp{
+			StatusCode: 1,
+			StatusMsg:  "网络出错了",
+		})
+		return
+	}
 	req.JSON(http.StatusOK, dto.LoginAndRegisterResp{
-		StatusCode: 1,
-		StatusMsg:  "网络出错了",
+		StatusCode: 0,
+		StatusMsg:  "注册成功",
+		UserId:     userId,
+		Token:      token,
 	})
 }
 
@@ -55,7 +66,14 @@ func (u *UserService) Login(ctx context.Context, req *app.RequestContext) {
 	username := req.Query("username")
 	password := req.Query("password")
 
-	user := userRepo.FindUserByUserName(username)
+	user, err := userRepo.FindUserByUserName(username)
+	if err != nil {
+		req.JSON(http.StatusOK, dto.LoginAndRegisterResp{
+			StatusCode: 1,
+			StatusMsg:  "网络出错了",
+		})
+		return
+	}
 	// 无此用户
 	if user == nil {
 		req.JSON(http.StatusOK, dto.LoginAndRegisterResp{
@@ -65,7 +83,7 @@ func (u *UserService) Login(ctx context.Context, req *app.RequestContext) {
 		return
 	}
 	// 密码解密
-	err := user.DesPassword()
+	err = user.DesPassword()
 	if err != nil {
 		req.JSON(http.StatusOK, dto.LoginAndRegisterResp{
 			StatusCode: 1,

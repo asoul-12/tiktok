@@ -79,7 +79,7 @@ func (feedService *FeedService) Feed(ctx context.Context, req *app.RequestContex
 				TotalFavorited:  author.TotalFavorited,
 				WorkCount:       author.WorkCount,
 			},
-			CommentCount:  0,
+			CommentCount:  v.CommentCount,
 			CoverURL:      v.CoverUrl,
 			FavoriteCount: v.FavoriteCount,
 			ID:            v.ID,

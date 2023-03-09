@@ -43,3 +43,15 @@ type MessageResp struct {
 	StatusMsg   string    `json:"status_msg"`   // 返回状态描述
 	MessageList []Message `json:"message_list"` // 用户列表
 }
+
+type CommentListResp struct {
+	CommentList []Comment `json:"comment_list"` // 评论列表
+	StatusCode  int32     `json:"status_code"`  // 状态码，0-成功，其他值-失败
+	StatusMsg   string    `json:"status_msg"`   // 返回状态描述
+}
+
+type CommentActionResp struct {
+	Comment    Comment `json:"comment"`     // 评论成功返回评论内容，不需要重新拉取整个列表
+	StatusCode int64   `json:"status_code"` // 状态码，0-成功，其他值-失败
+	StatusMsg  string  `json:"status_msg"`  // 返回状态描述
+}
