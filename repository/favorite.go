@@ -75,3 +75,20 @@ func (favoriteRepo *FavoriteRepo) GetUserFavoriteList(userId int64) (videoList [
 	}
 	return videoList, nil
 }
+
+func (favoriteRepo *FavoriteRepo) CheckFavorite(userId, videoId int64) (bool, error) {
+	favorite := model.Favorite{
+		UserId:     userId,
+		VideoId:    videoId,
+		IsFavorite: true,
+	}
+	var count int64
+	err := global.DB.Model(favorite).Where(favorite).Count(&count).Error
+	if err != nil {
+		return false, err
+	}
+	if count == 0 {
+		return false, nil
+	}
+	return true, nil
+}
