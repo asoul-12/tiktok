@@ -5,8 +5,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"net/http"
 	"strconv"
-	"tiktok/model"
 	"tiktok/model/dto"
+	"tiktok/model/entity"
 	"tiktok/repository"
 )
 
@@ -42,7 +42,7 @@ func (favoriteService *FavoriteService) Action(ctx context.Context, req *app.Req
 		return
 	}
 	// repo
-	err := favoriteService.favoriteRepo.FavoriteAction(&model.Favorite{
+	err := favoriteService.favoriteRepo.FavoriteAction(&entity.Favorite{
 		UserId:     userId,
 		VideoId:    videoId,
 		IsFavorite: isFavorite,

@@ -5,8 +5,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"net/http"
 	"strconv"
-	"tiktok/model"
 	"tiktok/model/dto"
+	"tiktok/model/entity"
 	"tiktok/repository"
 	"time"
 )
@@ -23,7 +23,7 @@ func (commentService *CommentService) CommentAction(ctx context.Context, req *ap
 	var commentText string
 	var commentId int64
 	var err error
-	var comment model.Comment
+	var comment entity.Comment
 	// 参数校验
 	videoId, err := strconv.ParseInt(videoID, 10, 64)
 	if err != nil {
@@ -36,7 +36,7 @@ func (commentService *CommentService) CommentAction(ctx context.Context, req *ap
 	switch actionType {
 	case "1":
 		commentText = req.Query("comment_text")
-		comment = model.Comment{
+		comment = entity.Comment{
 			UserId:     userId,
 			VideoId:    videoId,
 			Content:    commentText,

@@ -3,7 +3,7 @@ package test
 import (
 	"fmt"
 	"testing"
-	"tiktok/model"
+	"tiktok/model/entity"
 	"tiktok/repository"
 	"tiktok/serverInit"
 )
@@ -19,7 +19,7 @@ func TestGetUserPublishVideoList(t *testing.T) {
 func TestFavoriteAction(t *testing.T) {
 	serverInit.InitDatabaseTest()
 	repo := repository.FavoriteRepo{}
-	err := repo.FavoriteAction(&model.Favorite{
+	err := repo.FavoriteAction(&entity.Favorite{
 		UserId:     7031070868872626176,
 		VideoId:    7031440251318960128,
 		IsFavorite: false,

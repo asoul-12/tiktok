@@ -5,13 +5,14 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"net/http"
 	"strconv"
-	"tiktok/model"
 	"tiktok/model/dto"
+	"tiktok/model/entity"
 	"tiktok/repository"
 )
 
 type RelationService struct {
 	relationRepo repository.RelationRepo
+	messageRepo  repository.MessageRepo
 }
 
 func (relationService *RelationService) FollowList(ctx context.Context, req *app.RequestContext) {
@@ -82,7 +83,7 @@ func (relationService *RelationService) FollowAction(ctx context.Context, req *a
 		return
 	}
 	// repo
-	err = relationService.relationRepo.Follow(&model.Follow{
+	err = relationService.relationRepo.Follow(&entity.Follow{
 		UserId:   userId,
 		FollowId: toUserId,
 		IsFollow: isFollow,
@@ -145,12 +146,21 @@ func (relationService *RelationService) FriendList(ctx context.Context, req *app
 	}
 	var friendList []dto.FriendUser
 	for _, user := range list {
+		message, _ := relationService.messageRepo.GetLatestMessage(userId, user.ID)
+		msgContent := ""
+		msgType := 0
+		if message != nil && message.FromUserId == userId {
+			msgType = 1
+		}
+		if message != nil {
+			msgContent = message.Content
+		}
 		item := dto.FriendUser{
 			ID:      user.ID,
 			Avatar:  user.Avatar,
 			Name:    user.Name,
-			Message: "todo",
-			MsgType: "0",
+			Message: msgContent,
+			MsgType: msgType,
 		}
 		friendList = append(friendList, item)
 	}

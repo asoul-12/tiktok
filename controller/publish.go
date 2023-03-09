@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"path"
 	"strconv"
-	"tiktok/model"
 	"tiktok/model/dto"
+	"tiktok/model/entity"
 	"tiktok/repository"
 	"tiktok/tools"
 	"time"
@@ -82,7 +82,7 @@ func (publishService *PublishService) Publish(ctx context.Context, req *app.Requ
 	// repository
 	playUrl = "http://192.168.31.187:8888/assets/play/" + fileName + videoExt
 	coverUrl = "http://192.168.31.187:8888/assets/cover/" + fileName + jpgExt
-	err = publishService.videoRepo.CreateVideo(&model.Video{
+	err = publishService.videoRepo.CreateVideo(&entity.Video{
 		Author:        userId,
 		PlayUrl:       playUrl,
 		CoverUrl:      coverUrl,
