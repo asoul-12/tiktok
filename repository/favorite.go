@@ -3,17 +3,17 @@ package repository
 import (
 	"gorm.io/gorm"
 	"tiktok/global"
-	"tiktok/model"
+	"tiktok/model/entity"
 )
 
 type FavoriteRepo struct{}
 
-func (favoriteRepo *FavoriteRepo) FavoriteAction(favorite *model.Favorite) (err error) {
+func (favoriteRepo *FavoriteRepo) FavoriteAction(favorite *entity.Favorite) (err error) {
 
 	err = global.DB.Transaction(func(tx *gorm.DB) error {
-		var f *model.Favorite
+		var f *entity.Favorite
 		// 是否有点赞记录
-		err = tx.Find(&f, model.Favorite{
+		err = tx.Find(&f, entity.Favorite{
 			UserId:  favorite.UserId,
 			VideoId: favorite.VideoId,
 		}).Error
@@ -27,7 +27,7 @@ func (favoriteRepo *FavoriteRepo) FavoriteAction(favorite *model.Favorite) (err 
 		} else if f.IsFavorite == favorite.IsFavorite {
 			return nil
 		} else {
-			err = tx.Model(favorite).Where(&model.Favorite{UserId: favorite.UserId, VideoId: favorite.VideoId}).Update("is_favorite", favorite.IsFavorite).Error
+			err = tx.Model(favorite).Where(&entity.Favorite{UserId: favorite.UserId, VideoId: favorite.VideoId}).Update("is_favorite", favorite.IsFavorite).Error
 		}
 		if err != nil {
 			return err
@@ -41,19 +41,19 @@ func (favoriteRepo *FavoriteRepo) FavoriteAction(favorite *model.Favorite) (err 
 			authorExpr = "total_favorited + 1"
 		}
 		// 视频点赞数更新
-		var video *model.Video
-		err = tx.Model(&video).Where(&model.Model{ID: favorite.VideoId}).Update("favorite_count", gorm.Expr(videoExpr)).Find(&video).Error
+		var video *entity.Video
+		err = tx.Model(&video).Where(&entity.Model{ID: favorite.VideoId}).Update("favorite_count", gorm.Expr(videoExpr)).Find(&video).Error
 		if err != nil {
 			return err
 		}
 		// 用户喜欢数更新
-		var user *model.User
-		err = tx.Model(user).Where(&model.Model{ID: favorite.UserId}).Update("favorite_count", gorm.Expr(userExpr)).Error
+		var user *entity.User
+		err = tx.Model(user).Where(&entity.Model{ID: favorite.UserId}).Update("favorite_count", gorm.Expr(userExpr)).Error
 		if err != nil {
 			return err
 		}
 		// 作者获赞数更新
-		err = tx.Model(&user).Where(&model.Model{ID: video.Author}).Update("total_favorited", gorm.Expr(authorExpr)).Error
+		err = tx.Model(&user).Where(&entity.Model{ID: video.Author}).Update("total_favorited", gorm.Expr(authorExpr)).Error
 		if err != nil {
 			return err
 		}
@@ -62,13 +62,13 @@ func (favoriteRepo *FavoriteRepo) FavoriteAction(favorite *model.Favorite) (err 
 	return err
 }
 
-func (favoriteRepo *FavoriteRepo) GetUserFavoriteList(userId int64) (videoList []*model.Video, err error) {
-	var favorite model.Favorite
+func (favoriteRepo *FavoriteRepo) GetUserFavoriteList(userId int64) (videoList []*entity.Video, err error) {
+	var favorite entity.Favorite
 	err = global.DB.
 		Model(favorite).
 		Select("videos.favorite_count", "videos.cover_url").
 		Joins("LEFT JOIN videos ON favorites.video_id = videos.id").
-		Where(&model.Favorite{UserId: userId}).
+		Where(&entity.Favorite{UserId: userId}).
 		Scan(&videoList).Error
 	if err != nil {
 		return nil, err
@@ -77,7 +77,7 @@ func (favoriteRepo *FavoriteRepo) GetUserFavoriteList(userId int64) (videoList [
 }
 
 func (favoriteRepo *FavoriteRepo) CheckFavorite(userId, videoId int64) (bool, error) {
-	favorite := model.Favorite{
+	favorite := entity.Favorite{
 		UserId:     userId,
 		VideoId:    videoId,
 		IsFavorite: true,

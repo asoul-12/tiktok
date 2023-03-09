@@ -1,4 +1,4 @@
-package model
+package entity
 
 type Video struct {
 	Model

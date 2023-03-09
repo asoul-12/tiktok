@@ -18,5 +18,5 @@ type FriendUser struct {
 	Avatar  string `json:"avatar"`   // 用户头像
 	Name    string `json:"name"`     // 用户名称
 	Message string `json:"message"`  // 和该好友的最新聊天消息
-	MsgType string `json:"msgType "` // message消息的类型，0 => 当前请求用户接收的消息， 1 => 当前请求用户发送的消息
+	MsgType int    `json:"msgType "` // message消息的类型，0 => 当前请求用户接收的消息， 1 => 当前请求用户发送的消息
 }

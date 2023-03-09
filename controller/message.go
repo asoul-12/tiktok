@@ -5,8 +5,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"net/http"
 	"strconv"
-	"tiktok/model"
 	"tiktok/model/dto"
+	"tiktok/model/entity"
 	"tiktok/model/query"
 	"tiktok/repository"
 	"time"
@@ -38,7 +38,7 @@ func (messageService *MessagesService) SendMessage(ctx context.Context, req *app
 		return
 	}
 	// repo
-	err = messageService.messageRepo.SendMessage(&model.Message{
+	err = messageService.messageRepo.SendMessage(&entity.Message{
 		ToUserId:   toUserId,
 		FromUserId: fromUserId,
 		Content:    content,

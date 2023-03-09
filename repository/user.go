@@ -3,12 +3,12 @@ package repository
 import (
 	"errors"
 	"gorm.io/gorm"
-	"tiktok/model"
+	"tiktok/model/entity"
 )
 
 type UserRepo struct{}
 
-func (userRepo *UserRepo) CreateUser(user *model.User) (int64, error) {
+func (userRepo *UserRepo) CreateUser(user *entity.User) (int64, error) {
 	user.SetId()
 	user.EncryptPassword()
 	user.SetSignature()
@@ -19,9 +19,9 @@ func (userRepo *UserRepo) CreateUser(user *model.User) (int64, error) {
 	return user.ID, nil
 }
 
-func (userRepo *UserRepo) FindUserByUserName(username string) (*model.User, error) {
-	var user *model.User
-	err := baseRepo.Take(&user, &model.User{Name: username})
+func (userRepo *UserRepo) FindUserByUserName(username string) (*entity.User, error) {
+	var user *entity.User
+	err := baseRepo.Take(&user, &entity.User{Name: username})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	} else if err != nil {
@@ -30,9 +30,9 @@ func (userRepo *UserRepo) FindUserByUserName(username string) (*model.User, erro
 	return user, nil
 }
 
-func (userRepo *UserRepo) FindUserByUserId(userId int64) (*model.User, error) {
-	var user *model.User
-	err := baseRepo.Take(&user, model.Model{
+func (userRepo *UserRepo) FindUserByUserId(userId int64) (*entity.User, error) {
+	var user *entity.User
+	err := baseRepo.Take(&user, entity.Model{
 		ID: userId,
 	})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
@@ -43,9 +43,9 @@ func (userRepo *UserRepo) FindUserByUserId(userId int64) (*model.User, error) {
 	return user, nil
 }
 
-func (userRepo *UserRepo) GetUserInfo(userId int64) (*model.User, error) {
-	var user *model.User
-	err := baseRepo.Take(&user, model.Model{ID: userId})
+func (userRepo *UserRepo) GetUserInfo(userId int64) (*entity.User, error) {
+	var user *entity.User
+	err := baseRepo.Take(&user, entity.Model{ID: userId})
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	} else if err != nil {

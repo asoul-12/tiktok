@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"gorm.io/gorm"
 	"tiktok/global"
-	"tiktok/model"
+	"tiktok/model/entity"
 )
 
 type VideoRepo struct{}
 
-func (videoRepo *VideoRepo) CreateVideo(video *model.Video) error {
+func (videoRepo *VideoRepo) CreateVideo(video *entity.Video) error {
 	err := global.DB.Transaction(func(tx *gorm.DB) error {
 		// 插入视频记录
 		video.GenerateID()
@@ -18,8 +18,8 @@ func (videoRepo *VideoRepo) CreateVideo(video *model.Video) error {
 			return err
 		}
 		// 用户视频数增加
-		var user *model.User
-		err = tx.Model(user).Where(&model.Model{ID: video.Author}).Update("work_count", gorm.Expr("work_count + 1")).Error
+		var user *entity.User
+		err = tx.Model(user).Where(&entity.Model{ID: video.Author}).Update("work_count", gorm.Expr("work_count + 1")).Error
 		if err != nil {
 			return err
 		}
@@ -27,8 +27,8 @@ func (videoRepo *VideoRepo) CreateVideo(video *model.Video) error {
 	})
 	return err
 }
-func (videoRepo *VideoRepo) GetFeedList(timestamp int64) ([]*model.Video, error) {
-	var videoList []*model.Video
+func (videoRepo *VideoRepo) GetFeedList(timestamp int64) ([]*entity.Video, error) {
+	var videoList []*entity.Video
 	where := fmt.Sprintf("UNIX_TIMESTAMP(created_at) < %d", timestamp)
 	err := baseRepo.FindWhereOrderLimit(&videoList, where, "created_at DESC", 5)
 	if err != nil {
@@ -37,8 +37,8 @@ func (videoRepo *VideoRepo) GetFeedList(timestamp int64) ([]*model.Video, error)
 	return videoList, nil
 }
 
-func (videoRepo *VideoRepo) GetUserPublishList(userId int64) (videoList []*model.Video, err error) {
-	err = baseRepo.Find(&videoList, &model.Video{Author: userId})
+func (videoRepo *VideoRepo) GetUserPublishList(userId int64) (videoList []*entity.Video, err error) {
+	err = baseRepo.Find(&videoList, &entity.Video{Author: userId})
 	if err != nil {
 		return nil, err
 	}

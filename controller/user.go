@@ -5,8 +5,8 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 	"net/http"
 	"strconv"
-	"tiktok/model"
 	"tiktok/model/dto"
+	"tiktok/model/entity"
 	"tiktok/repository"
 	"tiktok/tools"
 )
@@ -35,7 +35,7 @@ func (u *UserService) Register(ctx context.Context, req *app.RequestContext) {
 		return
 	}
 
-	userId, err := userRepo.CreateUser(&model.User{
+	userId, err := userRepo.CreateUser(&entity.User{
 		Name:     username,
 		Password: password,
 	})
