@@ -1,0 +1,25 @@
+{
+  "server": {
+    "addr": "0.0.0.0:8888",
+    "readTimeOut": 10,
+    "writeTimeOut": 10
+  },
+  "mysql": {
+    "addr": "",
+    "user": "",
+    "password": "",
+    "database": ""
+  },
+  "jwt": {
+    "issuer": "",
+    "tokenExpireDuration": ,
+    "secrete": "",
+    "subject": ""
+  },
+  "cos": {
+    "addr": "",
+    "secretID": "",
+    "secretKey": "",
+    "cdnAddr": ""
+  }
+}

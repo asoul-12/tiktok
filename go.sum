@@ -1,5 +1,7 @@
 github.com/bakape/thumbnailer/v2 v2.7.1 h1:dtlbmzup5PhUVsnOB2uF82FKJaphLY41kOXTP3Hb1+Q=
 github.com/bakape/thumbnailer/v2 v2.7.1/go.mod h1:+yOYrfZmQ3VO7uqVHxTr3p5J74WRjP5MeQQXaU6GBjY=
+github.com/bwmarrin/snowflake v0.3.0 h1:xm67bEhkKh6ij1790JB83OujPR5CzNe8QuQqAgISZN0=
+github.com/bwmarrin/snowflake v0.3.0/go.mod h1:NdZxfVWX+oR6y2K0o6qAYv6gIOP9rjG0/E9WsDpxqwE=
 github.com/bytedance/go-tagexpr/v2 v2.9.2 h1:QySJaAIQgOEDQBLS3x9BxOWrnhqu5sQ+f6HaZIxD39I=
 github.com/bytedance/go-tagexpr/v2 v2.9.2/go.mod h1:5qsx05dYOiUXOUgnQ7w3Oz8BYs2qtM/bJokdLb79wRM=
 github.com/bytedance/gopkg v0.0.0-20220413063733-65bf48ffb3a7 h1:PtwsQyQJGxf8iaPptPNaduEIu9BnrNms+pcRdHAxZaM=

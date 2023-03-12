@@ -17,7 +17,7 @@ func TestGetUserPublishVideoList(t *testing.T) {
 }
 
 func TestFavoriteAction(t *testing.T) {
-	serverInit.InitDatabaseTest()
+	serverInit.InitDatabase()
 	repo := repository.FavoriteRepo{}
 	err := repo.FavoriteAction(&entity.Favorite{
 		UserId:     7031070868872626176,

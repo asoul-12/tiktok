@@ -2,6 +2,7 @@ package test
 
 import (
 	"fmt"
+	"log"
 	"testing"
 	"tiktok/repository"
 	"tiktok/serverInit"
@@ -11,12 +12,15 @@ import (
 func TestUser(t *testing.T) {
 	serverInit.InitDatabase()
 	userRepo := repository.UserRepo{}
-	name := userRepo.FindUserByUserName("asoul")
+	name, err := userRepo.FindUserByUserName("asoul")
+	if err != nil {
+		log.Fatal(err)
+	}
 	fmt.Println(name)
 }
 
 func TestGetVideoList(t *testing.T) {
-	serverInit.InitDatabaseTest()
+	serverInit.InitDatabase()
 	videoRepo := repository.VideoRepo{}
 	list, _ := videoRepo.GetFeedList(time.Now().Unix())
 	videoList := list

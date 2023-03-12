@@ -13,7 +13,8 @@ import (
 )
 
 type MessagesService struct {
-	messageRepo repository.MessageRepo
+	messageRepo  repository.MessageRepo
+	relationRepo repository.RelationRepo
 }
 
 func (messageService *MessagesService) SendMessage(ctx context.Context, req *app.RequestContext) {
@@ -37,6 +38,8 @@ func (messageService *MessagesService) SendMessage(ctx context.Context, req *app
 		})
 		return
 	}
+	// 是否互关
+
 	// repo
 	err = messageService.messageRepo.SendMessage(&entity.Message{
 		ToUserId:   toUserId,

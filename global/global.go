@@ -1,7 +1,13 @@
 package global
 
-import "gorm.io/gorm"
+import (
+	"github.com/bwmarrin/snowflake"
+	"gorm.io/gorm"
+	"tiktok/config"
+)
 
 var (
-	DB *gorm.DB
+	Config        *config.Config
+	DB            *gorm.DB
+	SnowFlakeNode *snowflake.Node
 )

@@ -1,0 +1,25 @@
+{
+  "server": {
+    "addr": "0.0.0.0:8888",
+    "readTimeOut": 10,
+    "writeTimeOut": 10
+  },
+  "mysql": {
+    "addr": "127.0.0.1:3306",
+    "user": "root",
+    "password": "123456",
+    "database": "db_tiktok"
+  },
+  "jwt": {
+    "issuer": "tiktok",
+    "tokenExpireDuration": 1440,
+    "secrete": "2a429be6ec30924041841720435b60c4c44c9e256ed74650b6f0294a427a1cc2",
+    "subject": "userId"
+  },
+  "cos": {
+    "addr": "",
+    "secretID": "",
+    "secretKey": "",
+    "cdnAddr": ""
+  }
+}

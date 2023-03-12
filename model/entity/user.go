@@ -18,9 +18,6 @@ type User struct {
 	FavoriteCount   int64
 }
 
-func (user *User) SetId() {
-	user.ID = tools.NewSnowFlake(0).GenSnowID()
-}
 func (user *User) EncryptPassword() (err error) {
 	password, err := tools.EncryptByAes([]byte(user.Password))
 	if err != nil {
