@@ -17,3 +17,5 @@
 docs
 assets
 .gitignore
+config.json
+*.json
