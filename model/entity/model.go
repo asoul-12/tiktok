@@ -2,7 +2,7 @@ package entity
 
 import (
 	"gorm.io/gorm"
-	"tiktok/tools"
+	"tiktok/global"
 	"time"
 )
 
@@ -14,5 +14,5 @@ type Model struct {
 }
 
 func (model *Model) GenerateID() {
-	model.ID = tools.NewSnowFlake(0).GenSnowID()
+	model.ID = global.SnowFlakeNode.Generate().Int64()
 }

@@ -9,7 +9,7 @@ import (
 type UserRepo struct{}
 
 func (userRepo *UserRepo) CreateUser(user *entity.User) (int64, error) {
-	user.SetId()
+	user.GenerateID()
 	user.EncryptPassword()
 	user.SetSignature()
 	err := baseRepo.Create(user)

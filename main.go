@@ -1,19 +1,12 @@
 package main
 
 import (
-	"github.com/cloudwego/hertz/pkg/app/server"
-	"github.com/sirupsen/logrus"
-	"os"
-	"tiktok/router"
+	"tiktok/config"
+	"tiktok/global"
 	"tiktok/serverInit"
 )
 
 func main() {
-	serverInit.InitDatabase()
-	hertz := server.Default()
-	dir, _ := os.Getwd()
-	hertz.Static("/assets", dir)
-	router.RegisterRouter(hertz)
-	logrus.SetReportCaller(true)
-	hertz.Spin()
+	global.Config = config.LoadConfigFromFile("config-test.json")
+	serverInit.ServerInitAndStart()
 }
