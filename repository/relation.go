@@ -98,3 +98,13 @@ func (relationRepo *RelationRepo) CheckFollow(userId, targetId int64) (bool, err
 	}
 	return false, nil
 }
+
+func (relationRepo *RelationRepo) CheckFriend(userId, targetId int64) (bool, error) {
+	var cnt int
+	err := global.DB.Raw("SELECT COUNT(*) FROM (SELECT * FROM follows WHERE user_id = ?) AS f1 "+
+		"INNER JOIN follows f2 ON f1.follow_id = f2.user_id where f1.follow_id = ?", userId, targetId).Scan(&cnt).Error
+	if err != nil || cnt == 0 {
+		return false, err
+	}
+	return true, nil
+}

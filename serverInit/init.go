@@ -11,6 +11,7 @@ import (
 	"os"
 	"tiktok/global"
 	"tiktok/router"
+	"time"
 )
 
 func ServerInitAndStart() {
@@ -38,7 +39,11 @@ func InitDatabase() {
 }
 
 func InitHertz() {
-	hertz := server.Default()
+	hertz := server.Default(
+		server.WithReadTimeout(global.Config.Server.ReadTimeOut),
+		server.WithWriteTimeout(global.Config.Server.WriteTimeOut*time.Second),
+		server.WithHostPorts(global.Config.Server.Addr))
+
 	dir, _ := os.Getwd()
 	hertz.Static("/assets", dir)
 	router.RegisterRouter(hertz)

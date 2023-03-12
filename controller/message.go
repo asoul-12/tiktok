@@ -31,15 +31,15 @@ func (messageService *MessagesService) SendMessage(ctx context.Context, req *app
 		})
 		return
 	}
-	if actionType != "1" {
+	// 是否互关
+	isFriend, err := messageService.relationRepo.CheckFriend(fromUserId, toUserId)
+	if actionType != "1" || !isFriend || err != nil {
 		req.JSON(http.StatusOK, dto.BaseResp{
 			StatusCode: 1,
 			StatusMsg:  "不支持的操作",
 		})
 		return
 	}
-	// 是否互关
-
 	// repo
 	err = messageService.messageRepo.SendMessage(&entity.Message{
 		ToUserId:   toUserId,
